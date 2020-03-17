@@ -1,0 +1,15 @@
+name: finance-viz
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - jupyterlab
+  - pandas
+  - matplotlib
+  - numpy
+  - statsmodels
+  - seaborn
+  - bokeh
+  - numba
+  - pip:
+    - streamlit
