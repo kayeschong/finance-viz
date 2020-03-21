@@ -7,9 +7,9 @@ dependencies:
   - pandas
   - matplotlib
   - numpy
-  - statsmodels
   - seaborn
   - bokeh
+  - altair
   - numba
   - pip
   - pip:
