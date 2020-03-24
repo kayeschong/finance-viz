@@ -15,8 +15,16 @@ def main():
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio("Go to", list(PAGES.keys()))
 
-    pages = PAGES.get(selection)
-    pages()
+    st.sidebar.title("About")
+    st.sidebar.info(
+        """
+        The source code can be found
+        [here](https://github.com/kayeschong/finance-viz).
+        """
+    )
+
+    selected_page = PAGES.get(selection)
+    selected_page()
 
 if __name__ == "__main__":
     main()
