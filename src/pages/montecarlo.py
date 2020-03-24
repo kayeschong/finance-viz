@@ -8,11 +8,11 @@ import pandas as pd
 def run_montecarlo():
     st.subheader('Monte Carlo Simulation')
     periods = st.slider('Days to simulate', min_value=100, max_value=400, value=100, step=100)
+    simulations =  st.number_input('Number of price paths', min_value=0, max_value=400, value=200, step=50)
     start_price = st.number_input('Start Price', min_value=50, value=50, step=10)
-    simulations =  st.number_input('Number of futures', min_value=0, max_value=400, value=200, step=50)
 
 
-    if st.button(f'Simulate 1 future over {periods} days'):
+    if st.button(f'Simulate 1 price path over {periods} days'):
 
         price_changes = np.random.randn(1, 1)
         price = start_price + price_changes
@@ -44,7 +44,7 @@ def run_montecarlo():
         st.button("Clear chart")
 
 
-    if st.button(f'Simulate {simulations} futures over {periods} days'):
+    if st.button(f'Simulate {simulations} price paths over {periods} days'):
         price_changes = np.random.randn(1, simulations)
         price = start_price + price_changes
 
