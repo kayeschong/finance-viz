@@ -39,3 +39,8 @@ conda activate finance-viz
 ```
 streamlit run app.py
 ```
+
+## Running with docker
+```
+docker-compose up
+```
