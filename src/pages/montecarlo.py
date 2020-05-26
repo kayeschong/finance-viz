@@ -4,52 +4,74 @@ import numpy as np
 import altair as alt
 import pandas as pd
 
+def load_initial_inputs():
+    """Load initial input values in sidebar and return widgets
+
+    Returns:
+        widgets: ...
+    """
+    simulation_type = st.sidebar.selectbox(
+        "Simulation type",
+        ("Price", "Option")
+    )
+    periods = st.sidebar.slider('Days to simulate', min_value=100, max_value=400, value=100, step=100)
+    simulations = st.sidebar.number_input('Number of price paths', min_value=0, max_value=400, value=200, step=50)
+    start_price = st.sidebar.number_input('Start Price', min_value=50, value=50, step=10)
+    annual_returns = st.sidebar.number_input('Annual returns', min_value=0., value=0.05, step=0.01)
+    volatility = st.sidebar.number_input('Volatility', min_value=0., value=0.05, step=0.01)
+    return simulation_type, periods, simulations, start_price, annual_returns, volatility
+
+
+def plot_single_path(start_price, periods):
+    price_changes = np.random.randn(1, 1)
+    price = start_price + price_changes
+    
+    st.markdown('Daily % price changes (Normally distributed)')
+    price_change_chart = st.line_chart(price_changes)
+
+    st.markdown('Prices (Returns lognormally distributed)')
+    price_chart = st.line_chart(price)
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+
+    for i in range(1, periods + 1):
+        price_changes = np.random.randn(1, 1)
+        price = price + price_changes
+
+        price_change_chart.add_rows(price_changes)
+        price_chart.add_rows(price)
+        
+        if i % (periods//100) == 0:
+            status = i // (periods//100)
+            status_text.text(f"{status}% Complete")
+            progress_bar.progress(status)
+            
+        time.sleep(0.005)
+
+    progress_bar.empty()
+
 
 def run_montecarlo():
-    st.subheader('Monte Carlo Simulation')
-    simulation_type = st.selectbox(
-        "Simulation type",
-        ("Prices", "Options")
-    )
-    periods = st.slider('Days to simulate', min_value=100, max_value=400, value=100, step=100)
-    simulations =  st.number_input('Number of price paths', min_value=0, max_value=400, value=200, step=50)
-    start_price = st.number_input('Start Price', min_value=50, value=50, step=10)
+    st.warning('Work in progress')
+    
+    (simulation_type, 
+     periods, 
+     simulations, 
+     start_price, 
+     annual_returns, 
+     volatility) = load_initial_inputs()
 
-    if simulation_type == "Prices":
-        plot_single_path = st.button(f'Simulate 1 price path over {periods} days')
-        plot_multi_path = st.button(f'Simulate {simulations} price paths over {periods} days')
+    st.subheader(f'Monte Carlo {simulation_type} Simulation')
+    
+    if simulation_type == "Price":
+        st.text("Visualize how the price of stocks changes under lognormal returns")
+        single_path = st.button(f'Simulate 1 price path over {periods} days')
+        multi_path = st.button(f'Simulate {simulations} price paths over {periods} days')
 
-        if plot_single_path:
+        if single_path:
+            plot_single_path(start_price, periods)
 
-            price_changes = np.random.randn(1, 1)
-            price = start_price + price_changes
-            
-            st.markdown('Daily price changes')
-            price_change_chart = st.line_chart(price_changes)
-
-            st.markdown('Prices')
-            price_chart = st.line_chart(price)
-            progress_bar = st.progress(0)
-            status_text = st.empty()
-
-            for i in range(1, periods + 1):
-                price_changes = np.random.randn(1, 1)
-                price = price + price_changes
-
-                price_change_chart.add_rows(price_changes)
-                price_chart.add_rows(price)
-                
-                if i % (periods//100) == 0:
-                    status = i // (periods//100)
-                    status_text.text(f"{status}% Complete")
-                    progress_bar.progress(status)
-                    
-                time.sleep(0.001)
-
-            progress_bar.empty()
-
-
-        if plot_multi_path:
+        if multi_path:
             price_changes = np.random.randn(1, simulations)
             price = start_price + price_changes
 
@@ -87,8 +109,7 @@ def run_montecarlo():
             if simulations == 0:
                 st.write("Try to simulate something.")
 
-    if simulation_type == "Options":
-        st.warning('Work in progress')
+    if simulation_type == "Option":
         option_type = st.selectbox(
             "Option type",
             ('Call', 'Put')
