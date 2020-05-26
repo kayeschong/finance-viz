@@ -10,7 +10,7 @@ dependencies:
   - seaborn
   - bokeh
   - altair
-  - numba
+  - plotly
   - pip
   - pip:
     - streamlit
